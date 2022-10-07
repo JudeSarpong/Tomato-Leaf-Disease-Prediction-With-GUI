@@ -3,6 +3,9 @@ import keras
 from keras.preprocessing.image import ImageDataGenerator 
 from keras.applications.vgg19 import VGG19, preprocess_input 
 
+#Run this python file to save the model as best_model.h5 or use any other name
+#Check the path to directory of the dataset. Get Dataset at https://www.kaggle.com/datasets/kaustubhb999/tomatoleaf
+
 train_datagen = ImageDataGenerator(zoom_range =0.5, shear_range=0.3, horizontal_flip = True, preprocessing_function= preprocess_input)
 
 val_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
@@ -33,7 +36,7 @@ base_model = VGG19(include_top = False, input_shape=(256,256,3), classes =10, cl
 for layer in base_model.layers:
   layer.trainable = False 
 
-print("BASE MODEL SUMMARY:")
+print("\n\nBASE MODEL SUMMARY:")
 base_model.summary()
 
 x = Flatten()(base_model.output)
@@ -44,7 +47,7 @@ x = Dense(units = 10, activation = 'softmax')(x)
 model = Model(base_model.input, x)
 
 
-print('FINAL MODEL SUMMARY:')
+print('\n\nFINAL MODEL SUMMARY:')
 model.summary()
 
 model.compile(optimizer='adam', loss=keras.losses.categorical_crossentropy, metrics=['accuracy'])
@@ -59,7 +62,9 @@ cb = [es, mc]
 
 #where es, mc and cb represents Earlystopping, Modelcheckpoint and callback respectively
 
-his = model.fit(train, steps_per_epoch = 170, epochs = 100, verbose=1, callbacks = cb, validation_data = val,
+
+
+his = model.fit(train, steps_per_epoch = 200, epochs = 100, verbose=1, callbacks = cb, validation_data = val,
                               validation_steps = 16)
 
 h = his
